@@ -28,6 +28,12 @@ const DigitalRegister: React.FC = () => {
   const handleRegisterClick = (register: Register) => {
     if (register.id === 'visitor') {
       navigate(ROUTES.VISITOR_REGISTER);
+    } else if (register.id === 'staff-purchase') {
+      navigate(ROUTES.STAFF_PURCHASE);
+    } else if (register.id === 'petty-cash') {
+      navigate(ROUTES.PETTY_CASH_PURCHASE);
+    } else if (register.id === 'eb-count') {
+      navigate(ROUTES.EB_COUNT);
     } else {
       // Handle other register clicks
       console.log('Clicked register:', register);

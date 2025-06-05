@@ -29,6 +29,10 @@ export const ROUTES = {
   // Digital Register routes
   DIGITAL_REGISTER: "/digital-register",
   VISITOR_REGISTER: "/visitor-register",
+  STAFF_PURCHASE: "/staff-purchase",
+  PETTY_CASH_PURCHASE: "/petty-cash-purchase",
+
+  EB_COUNT: '/eb-count',
 } as const;
 
 export default ROUTES;

@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { format, subDays } from 'date-fns';
-import { Search, Calendar, ChevronLeft, Plus } from 'lucide-react';
+import { subDays } from 'date-fns';
 import { DateRange } from 'react-day-picker';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { DateRangePicker } from "@/components/ui/date-range-picker/index";
+import { RegisterHeader } from '@/components/RegisterHeader';
+import { RegisterActionsBar } from '@/components/RegisterActionsBar';
 import { VisitorEntryForm } from '@/components/visitor/VisitorEntryForm';
 import { VisitorEntryList, VisitorEntry } from '@/components/visitor/VisitorEntryList';
 import { toast } from 'sonner';
@@ -149,7 +145,6 @@ const mockEntries: VisitorEntry[] = [
 ];
 
 export const VisitorRegister: React.FC = () => {
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState<DateRange>({
     from: subDays(new Date(), 7),
@@ -185,47 +180,16 @@ export const VisitorRegister: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-[#f5f6fa]">
-      {/* Header */}
-      <div className="bg-[#181f60] text-white">
-        <div className="flex items-center px-4 py-3">
-          <button onClick={() => navigate(-1)} className="mr-2">
-            <ChevronLeft size={24} className="text-white" />
-          </button>
-          <h1 className="text-lg font-semibold">Visitor Register</h1>
-        </div>
-      </div>
+      <RegisterHeader title="Visitor Register" />
 
-      {/* Actions Bar */}
-      <div className="p-4 bg-white border-b">
-        <div className="flex flex-col gap-3">
-          <div className="flex justify-end">
-            <Button
-              className="bg-[#181f60] hover:bg-[#4f5fff]"
-              onClick={() => setIsDialogOpen(true)}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Create New Entry
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input
-                placeholder="Search visitors..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-            <DateRangePicker
-              value={dateRange}
-              onChange={setDateRange}
-              className="w-[300px]"
-            />
-          </div>
-        </div>
-      </div>
+      <RegisterActionsBar
+        onCreateClick={() => setIsDialogOpen(true)}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        dateRange={dateRange}
+        onDateRangeChange={setDateRange}
+        searchPlaceholder="Search visitors..."
+      />
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">

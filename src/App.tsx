@@ -20,6 +20,9 @@ import { ROUTES } from "./lib/routes";
 import MySchedule from "./pages/MySchedule";
 import DigitalRegister from "./pages/DigitalRegister";
 import { VisitorRegister } from "@/pages/VisitorRegister";
+import { StaffPurchase } from "@/pages/StaffPurchase";
+import { PettyCashPurchase } from "@/pages/PettyCashPurchase";
+import { EBCount } from "@/pages/EBCount";
 // New pages from repositories
 import StoreInsights from "./pages/insights/StoreInsights";
 import StoreAnalytics from "./pages/insights/StoreAnalytics";
@@ -80,9 +83,12 @@ const App = () => (
             <Route path={ROUTES.STORE_PLANOMGRAM} element={<StorePlanogram />} />
             <Route path={ROUTES.MY_SCHEDULE} element={<MySchedule />} />
             
-            {/* Digital Register route */}
+            {/* Digital Register routes */}
             <Route path={ROUTES.DIGITAL_REGISTER} element={<DigitalRegister />} />
             <Route path={ROUTES.VISITOR_REGISTER} element={<VisitorRegister />} />
+            <Route path={ROUTES.STAFF_PURCHASE} element={<StaffPurchase />} />
+            <Route path={ROUTES.PETTY_CASH_PURCHASE} element={<PettyCashPurchase />} />
+            <Route path={ROUTES.EB_COUNT} element={<EBCount />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
