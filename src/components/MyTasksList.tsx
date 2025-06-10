@@ -73,7 +73,7 @@ export default function MyTasksList({ fullView, onViewAll, onBack }) {
                         </div>
                         <div className="overflow-y-auto max-h-[calc(100vh-200px)] pb-12">
                             {tasks.map((task, i) => (
-                                <Card className="mb-3 p-4 cursor-pointer" key={i} onClick={() => navigate(`/task/${task.id}`)}>
+                                <Card className="mb-3 p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors" key={i} onClick={() => navigate(`/task/${task.id}`)}>
                                     <div className="flex flex-col gap-2">
                                         <div className="flex items-center justify-between">
                                             <span className="font-medium text-base">{task.title}</span>
@@ -111,7 +111,7 @@ export default function MyTasksList({ fullView, onViewAll, onBack }) {
             ) : (
                 <>
                     {tasks.slice(0, 3).map((task, i) => (
-                        <Card className="mb-3 p-4 cursor-pointer" key={i} onClick={() => navigate(`/task/${task.id}`)}>
+                        <Card className="mb-3 p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors" key={i} onClick={() => navigate(`/task/${task.id}`)}>
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center justify-between">
                                     <span className="font-medium text-base">{task.title}</span>

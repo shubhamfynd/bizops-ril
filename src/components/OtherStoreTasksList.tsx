@@ -3,9 +3,11 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChevronRight, CalendarDays, User, Plus } from "lucide-react";
 import { tasks as allTasks } from "@/data/tasks";
+import { storeStaff } from "@/data/staff";
 import TaskHeader from "@/components/TaskHeader";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
+import CreateTaskModal from "./CreateTaskModal";
 
 const statusTabs = [
   { label: "Pending", count: 14 },
@@ -16,8 +18,41 @@ const statusTabs = [
 export default function OtherStoreTasksList({ fullView, onViewAll, onBack }) {
   const [activeStatus, setActiveStatus] = useState("Pending");
   const [search, setSearch] = useState("");
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const navigate = useNavigate();
   const tasks = allTasks.filter(t => t.group === "other" && t.title.toLowerCase().includes(search.toLowerCase()));
+
+  const handleCreateTask = (taskData: {
+    title: string;
+    description: string;
+    startTime: string;
+    endTime: string;
+    assigneeId: string;
+    priority: string;
+    requiresImage: boolean;
+  }) => {
+    const staff = storeStaff.find(s => s.id === taskData.assigneeId);
+    if (staff) {
+      const newTask = {
+        id: allTasks.length + 1,
+        title: taskData.title,
+        priority: taskData.priority,
+        type: 'Ad-Hoc',
+        due: taskData.endTime,
+        assignee: staff.name,
+        group: 'other',
+        adhocDetails: {
+          description: taskData.description,
+          startTime: taskData.startTime,
+          endTime: taskData.endTime,
+          requiresImage: taskData.requiresImage
+        },
+        checklistDetails: null
+      };
+      allTasks.push(newTask);
+    }
+  };
+
   return (
     <div className={fullView ? "min-h-screen bg-[#181f60] pt-0" : ""}>
       {fullView ? (
@@ -42,7 +77,7 @@ export default function OtherStoreTasksList({ fullView, onViewAll, onBack }) {
             </div>
             <div className="overflow-y-auto max-h-[calc(100vh-200px)] pb-12">
               {tasks.map((task, i) => (
-                <Card className="mb-3 p-4 cursor-pointer" key={i} onClick={() => navigate(`/task/${task.id}`)}>
+                <Card className="mb-3 p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors" key={i} onClick={() => navigate(`/task/${task.id}`)}>
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
                       <span className="font-medium text-base">{task.title}</span>
@@ -102,13 +137,20 @@ export default function OtherStoreTasksList({ fullView, onViewAll, onBack }) {
                 </Card>
               ))}
             </div>
-            {fullView && <button className="fixed bottom-24 right-6 bg-[#4f5fff] text-white rounded-full p-4 shadow-lg"><Plus size={24} /></button>}
+            {fullView && (
+              <button 
+                className="fixed bottom-24 right-6 bg-[#4f5fff] text-white rounded-full p-4 shadow-lg"
+                onClick={() => setShowCreateModal(true)}
+              >
+                <Plus size={24} />
+              </button>
+            )}
           </div>
         </>
       ) : (
         <>
           {tasks.slice(0, 3).map((task, i) => (
-            <Card className="mb-3 p-4 cursor-pointer" key={i} onClick={() => navigate(`/task/${task.id}`)}>
+            <Card className="mb-3 p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors" key={i} onClick={() => navigate(`/task/${task.id}`)}>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-base">{task.title}</span>
@@ -170,6 +212,12 @@ export default function OtherStoreTasksList({ fullView, onViewAll, onBack }) {
           <button className="mx-auto block text-[#2563eb] text-sm font-semibold mt-2 mb-1" onClick={onViewAll}>View All</button>
         </>
       )}
+
+      <CreateTaskModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onCreateTask={handleCreateTask}
+      />
     </div>
   );
 } 
