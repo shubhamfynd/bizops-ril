@@ -20,6 +20,8 @@ export default function TaskDetailsPage() {
   const [checklistAnswers, setChecklistAnswers] = React.useState<{ [qIdx: number]: string }>({});
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [answers, setAnswers] = useState({});
+  const [cardAnswers, setCardAnswers] = useState<{ [qIdx: number]: string }>({});
+  const [cardRemarks, setCardRemarks] = useState<{ [qIdx: number]: string }>({});
 
   const handleOptionChange = (questionIndex, selectedOption) => {
     setAnswers((prev) => ({
@@ -137,6 +139,53 @@ export default function TaskDetailsPage() {
 
         ) : (
           <div className="text-xs text-gray-700">No extra details for this task type.</div>
+        )}
+        {/* Checklist card view (all questions at once, not modal) */}
+        {task.type === 'Checklist' && checklistDetails && !showChecklistModal && (
+          <div className="flex flex-col gap-6 mt-4">
+            {checklistDetails.questions.map((q, idx) => (
+              <div key={idx} className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+                <h3 className="text-base font-semibold text-gray-800 mb-4">{q.question}</h3>
+                <div className="flex flex-col gap-2 mb-2">
+                  {["Done", "Pending"].map((opt, oIdx) => (
+                    <label
+                      key={oIdx}
+                      className={`border rounded-xl px-4 py-2 flex items-center text-sm cursor-pointer transition-all ${
+                        (cardAnswers[idx] || '').trim().toLowerCase() === opt.trim().toLowerCase()
+                          ? 'border-[#4f5fff] bg-[#f5f7ff]'
+                          : 'border-gray-200 bg-white'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name={`card-question-${idx}`}
+                        value={opt}
+                        checked={(cardAnswers[idx] || '').trim().toLowerCase() === opt.trim().toLowerCase()}
+                        onChange={e => setCardAnswers(a => ({ ...a, [idx]: e.target.value }))}
+                        className="mr-2 accent-[#4f5fff]"
+                      />
+                      {opt}
+                    </label>
+                  ))}
+                </div>
+                {/* Remarks if Pending */}
+                {(cardAnswers[idx] || '').trim().toLowerCase() === 'pending' && (
+                  <div className="mb-2">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Remarks <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-[#4f5fff] focus:border-transparent"
+                      placeholder="Please provide remarks"
+                      value={cardRemarks[idx] || ''}
+                      onChange={e => setCardRemarks(r => ({ ...r, [idx]: e.target.value }))}
+                      required
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         )}
         <div className="flex-1" />
 

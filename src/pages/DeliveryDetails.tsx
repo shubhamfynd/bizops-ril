@@ -1,99 +1,116 @@
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { ArrowLeft, ChevronLeft } from 'lucide-react';
-import { getDeliveryById, getAssociateById } from '@/data/mockData';
-import DeliveryMap from '@/components/DeliveryMap';
-import ShipmentDetails from '@/components/ShipmentDetails';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import Footer from '@/components/Footer';
+import { getDeliveryById } from '@/data/mockData';
 
 const DeliveryDetails = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const navigate = useNavigate();
-  const shipment = id ? getDeliveryById(id) : undefined;
-  const associate = shipment?.associateId ? getAssociateById(shipment.associateId) : undefined;
+  const [activeTab, setActiveTab] = useState<'details' | 'tracking'>('details');
 
-  const handleStartGRN = () => {
-    // TODO: Implement GRN functionality
-    console.log('Starting GRN for shipment:', shipment?.id);
-  };
+  const delivery = id ? getDeliveryById(id) : undefined;
 
-  if (!shipment) {
+  if (!delivery) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <p>Shipment not found</p>
-        <button 
-          className="mt-4 bg-primary text-white px-4 py-2 rounded-lg"
-          onClick={() => navigate('/deliveries')}
-        >
-          Back to Deliveries
-        </button>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Delivery not found</h1>
+          <Button onClick={() => navigate('/deliveries')}>Back to Deliveries</Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="pb-16 min-h-screen">
-      
-      {/* <header className="bg-white py-4 px-4 flex items-center shadow-sm">
-        <button onClick={() => navigate('/deliveries')} className="mr-3">
-          <ChevronLeft size={24}/>
-        </button>
-        <h1 className="text-xl font-semibold">Delivery Details</h1>
-      </header> */}
-
-<div className="bg-[#181f60] w-full pt-6 pb-4 shadow-md">
-        <div className="flex items-center mx-4">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="flex items-center px-4 py-3">
           <button
-            onClick={() => { navigate(-1) }}
-            className="p-2 text-white"
+            onClick={() => navigate('/deliveries')}
+            className="mr-3 text-gray-600 hover:text-gray-800"
           >
             <ChevronLeft size={24} />
           </button>
-
-          <div className="">
-            <span className="text-white font-semibold text-lg">Delivery Details</span>
+          <div>
+            <h1 className="text-lg font-semibold">Delivery Details</h1>
+            <p className="text-sm text-gray-500">#{delivery.id}</p>
           </div>
-
         </div>
-
       </div>
 
-      <div className="mt-4 pb-16 flex flex-col max-h-[calc(100vh-70px)] overflow-auto">
-      <div className="p-4">
-        {associate ? (
-          <DeliveryMap shipment={shipment} associate={associate} />
-        ) : (
-          <div className="bg-gray-100 rounded-lg p-4 mb-4 text-center">
-            <p className="text-gray-600">No delivery associate assigned yet.</p>
-            <p className="text-sm text-gray-500">Map view will be available once an associate is assigned.</p>
-          </div>
-        )}
-        
-        <ShipmentDetails shipment={shipment} />
+      {/* Content */}
+      <div className="p-4 space-y-4">
+        {/* Status Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>Status</span>
+              <Badge 
+                variant={delivery.status === 'delivered' ? 'default' : 'secondary'}
+                className={delivery.status === 'delivered' ? 'bg-green-100 text-green-800' : ''}
+              >
+                {delivery.status}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Tracking Number:</span>
+                <span className="font-medium">{delivery.trackingNumber}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Scheduled Time:</span>
+                <span className="font-medium">{new Date(delivery.scheduledTime).toLocaleString()}</span>
+              </div>
+              {delivery.eta && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">ETA:</span>
+                  <span className="font-medium">{new Date(delivery.eta).toLocaleString()}</span>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="mt-6 px-4">
-          <Button 
-            className={`w-full py-3 ${
-              shipment.status === 'delivered' 
-                ? 'bg-primary hover:bg-primary/90 text-white' 
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-            onClick={handleStartGRN}
-            disabled={shipment.status !== 'delivered'}
-          >
-            Start GRN
+        {/* Package Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Package Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Total Items:</span>
+                <span className="font-medium">{delivery.totalItems}</span>
+              </div>
+              <div className="space-y-2">
+                <span className="text-gray-600">Items:</span>
+                {delivery.items.map((item, index) => (
+                  <div key={item.id} className="flex justify-between text-sm">
+                    <span>{item.name}</span>
+                    <span className="font-medium">Qty: {item.quantity}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Actions */}
+        <div className="flex space-x-3">
+          <Button className="flex-1" variant="outline">
+            Track Package
           </Button>
-          {shipment.status !== 'delivered' && (
-            <p className="text-sm text-gray-500 text-center mt-2">
-              GRN can only be started for delivered shipments
-            </p>
-          )}
+          <Button className="flex-1">
+            Mark as Delivered
+          </Button>
         </div>
       </div>
-      </div>
-      
-      <Footer />
     </div>
   );
 };

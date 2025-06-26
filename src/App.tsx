@@ -32,6 +32,8 @@ import StaffPerformance from "./pages/insights/StaffPerformance";
 import Ticket from "./pages/Ticket";
 import Analytics from "./pages/Analytics";
 import StorePlanogram from "./pages/StorePlanogram";
+import AppStories from "./components/AppStories";
+import MyTeam from "./pages/MyTeam";
 // Create a new QueryClient instance
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,6 +53,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path={ROUTES.APP_STORIES} element={<AppStories />} />
             <Route path={ROUTES.HOME} element={<Home />} />
             <Route path={ROUTES.MAP} element={<Map />} />
             <Route path={ROUTES.MY_TASKS} element={<MyTasksPage />} />
@@ -89,6 +92,9 @@ const App = () => (
             <Route path={ROUTES.STAFF_PURCHASE} element={<StaffPurchase />} />
             <Route path={ROUTES.PETTY_CASH_PURCHASE} element={<PettyCashPurchase />} />
             <Route path={ROUTES.EB_COUNT} element={<EBCount />} />
+            
+            {/* New Routes from my-team */}
+            <Route path={ROUTES.MY_TEAM} element={<MyTeam />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

@@ -1,6 +1,4 @@
-
 import React, { useState } from "react";
-import Footer from "@/components/Footer";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/home/Header";
 import ClockInSection from "@/components/home/ClockInSection";
@@ -25,9 +23,6 @@ const Home: React.FC = () => {
           <Announcements />
         </div>
       </div>
-
-      {/* Footer - Fixed at bottom */}
-      {!showMenu && <Footer />}
     </div>
   );
 };

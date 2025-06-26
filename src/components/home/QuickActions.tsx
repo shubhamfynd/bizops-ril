@@ -36,6 +36,7 @@ const QuickActions: React.FC = () => {
     { icon: <Users size={24} className="text-blue-700" />, label: "Digital Register", route: ROUTES.DIGITAL_REGISTER, badge: 1 },
     { icon: <SlidersHorizontal size={24} className="text-blue-700" />, label: "Store Planogram", route: ROUTES.STORE_PLANOMGRAM },
     { icon: <AlarmClock size={24} className="text-blue-700" />, label: "My Schedule", route: ROUTES.MY_SCHEDULE },
+    { icon: <Users size={24} className="text-blue-700" />, label: "My Team", route: ROUTES.MY_TEAM },
   ];
 
   return (

@@ -1,251 +1,206 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, CalendarDays, ArrowUp, ArrowDown, Users, Clock, PieChart, DollarSign, LineChart, Smile } from 'lucide-react';
-import { storeInsights } from '@/data/insightsData';
-import { Card, CardContent } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import Footer from '@/components/Footer';
 import { ROUTES } from '@/lib/routes';
 
-const StoreInsights: React.FC = () => {
+const StoreInsights = () => {
+  const [selectedPeriod, setSelectedPeriod] = useState('today');
   const navigate = useNavigate();
-  const [currentDate, setCurrentDate] = useState(new Date());
-  
-  // Get the most recent insight data
-  const latestInsight = storeInsights[0];
-  const previousInsight = storeInsights[1];
-  
-  // Calculate daily changes
-  const calculateChange = (current: number, previous: number) => {
-    const change = ((current - previous) / previous) * 100;
-    return {
-      value: Math.abs(change).toFixed(1),
-      isPositive: change >= 0
-    };
-  };
-  
-  const changes = {
-    footfall: calculateChange(latestInsight.footfall, previousInsight.footfall),
-    conversion: calculateChange(latestInsight.conversion, previousInsight.conversion),
-    dwellTime: calculateChange(latestInsight.averageDwellTime, previousInsight.averageDwellTime),
-    salesPerSqFt: calculateChange(latestInsight.salesPerSqFt, previousInsight.salesPerSqFt),
-    satisfaction: calculateChange(latestInsight.customerSatisfaction, previousInsight.customerSatisfaction)
-  };
-  
-  // Prepare chart data
-  const chartData = storeInsights
-    .slice()
-    .reverse()
-    .map(insight => ({
-      date: new Date(insight.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      footfall: insight.footfall
-    }));
+
+  const periods = [
+    { id: 'today', label: 'Today' },
+    { id: 'week', label: 'This Week' },
+    { id: 'month', label: 'This Month' },
+    { id: 'quarter', label: 'This Quarter' }
+  ];
+
+  const metrics = [
+    {
+      title: 'Total Sales',
+      value: '₹45,230',
+      change: '+12.5%',
+      trend: 'up',
+      icon: DollarSign,
+      color: 'text-green-600'
+    },
+    {
+      title: 'Customer Visits',
+      value: '1,234',
+      change: '+8.2%',
+      trend: 'up',
+      icon: Users,
+      color: 'text-blue-600'
+    },
+    {
+      title: 'Average Transaction',
+      value: '₹367',
+      change: '-2.1%',
+      trend: 'down',
+      icon: PieChart,
+      color: 'text-orange-600'
+    },
+    {
+      title: 'Staff Productivity',
+      value: '94%',
+      change: '+5.3%',
+      trend: 'up',
+      icon: Clock,
+      color: 'text-purple-600'
+    }
+  ];
+
+  const quickActions = [
+    {
+      title: 'Store Analytics',
+      description: 'Detailed performance metrics',
+      icon: LineChart,
+      route: ROUTES.STORE_ANALYTICS,
+      color: 'bg-blue-500'
+    },
+    {
+      title: 'Store Heatmap',
+      description: 'Customer traffic patterns',
+      icon: PieChart,
+      route: ROUTES.STORE_HEATMAP,
+      color: 'bg-green-500'
+    },
+    {
+      title: 'Customer Journey',
+      description: 'Customer interaction flow',
+      icon: Users,
+      route: ROUTES.CUSTOMER_JOURNEY,
+      color: 'bg-purple-500'
+    },
+    {
+      title: 'Staff Performance',
+      description: 'Team productivity insights',
+      icon: Smile,
+      route: ROUTES.STAFF_PERFORMANCE,
+      color: 'bg-orange-500'
+    }
+  ];
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      <header className="bg-white py-4 px-4 flex items-center justify-between shadow-sm">
-        <div className="flex items-center">
-          <ChevronLeft 
-            className="h-6 w-6 text-gray-700 mr-2 cursor-pointer" 
-            onClick={() => navigate(ROUTES.HOME)}
-          />
-          <h1 className="text-xl font-semibold">Insights</h1>
-        </div>
-        <Button variant="outline" size="sm" className="flex items-center">
-          <CalendarDays className="h-4 w-4 mr-1" />
-          Today
-        </Button>
-      </header>
-
-      <div className="flex-1 overflow-y-auto p-4 pb-24">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-medium">Key Metrics</h2>
-          <div className="flex">
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-[#181f60] w-full pt-6 pb-4 shadow-md">
+        <div className="flex items-center mx-4">
+          <button
+            onClick={() => navigate('/home')}
+            className="p-2 text-white"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <div className="ml-2">
+            <span className="text-white font-semibold text-lg">Store Insights</span>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          {/* Footfall */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-gray-500">Footfall</span>
-                <Users className="h-4 w-4 text-blue-500" />
-              </div>
-              <div className="flex items-baseline justify-between">
-                <span className="text-2xl font-bold">{latestInsight.footfall}</span>
-                <div className={`flex items-center text-xs ${changes.footfall.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                  {changes.footfall.isPositive ? (
-                    <ArrowUp className="h-3 w-3 mr-0.5" />
-                  ) : (
-                    <ArrowDown className="h-3 w-3 mr-0.5" />
-                  )}
-                  {changes.footfall.value}%
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Conversion */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-gray-500">Conversion</span>
-                <PieChart className="h-4 w-4 text-green-500" />
-              </div>
-              <div className="flex items-baseline justify-between">
-                <span className="text-2xl font-bold">{latestInsight.conversion}%</span>
-                <div className={`flex items-center text-xs ${changes.conversion.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                  {changes.conversion.isPositive ? (
-                    <ArrowUp className="h-3 w-3 mr-0.5" />
-                  ) : (
-                    <ArrowDown className="h-3 w-3 mr-0.5" />
-                  )}
-                  {changes.conversion.value}%
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Dwell Time */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-gray-500">Avg. Dwell Time</span>
-                <Clock className="h-4 w-4 text-purple-500" />
-              </div>
-              <div className="flex items-baseline justify-between">
-                <span className="text-2xl font-bold">{latestInsight.averageDwellTime} min</span>
-                <div className={`flex items-center text-xs ${changes.dwellTime.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                  {changes.dwellTime.isPositive ? (
-                    <ArrowUp className="h-3 w-3 mr-0.5" />
-                  ) : (
-                    <ArrowDown className="h-3 w-3 mr-0.5" />
-                  )}
-                  {changes.dwellTime.value}%
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Sales per sq ft */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-gray-500">Sales per sq ft</span>
-                <DollarSign className="h-4 w-4 text-yellow-500" />
-              </div>
-              <div className="flex items-baseline justify-between">
-                <span className="text-2xl font-bold">₹{latestInsight.salesPerSqFt}</span>
-                <div className={`flex items-center text-xs ${changes.salesPerSqFt.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                  {changes.salesPerSqFt.isPositive ? (
-                    <ArrowUp className="h-3 w-3 mr-0.5" />
-                  ) : (
-                    <ArrowDown className="h-3 w-3 mr-0.5" />
-                  )}
-                  {changes.salesPerSqFt.value}%
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Customer Satisfaction */}
-        <Card className="mb-6">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-medium">Customer Satisfaction</span>
-              <Smile className="h-5 w-5 text-yellow-500" />
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-baseline">
-                <span className="text-3xl font-bold">{latestInsight.customerSatisfaction}</span>
-                <span className="text-gray-500 ml-1">/5</span>
-              </div>
-              <div className={`flex items-center text-sm ${changes.satisfaction.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                {changes.satisfaction.isPositive ? (
-                  <ArrowUp className="h-4 w-4 mr-1" />
-                ) : (
-                  <ArrowDown className="h-4 w-4 mr-1" />
-                )}
-                {changes.satisfaction.value}% from yesterday
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Footfall Trend */}
-        <Card className="mb-6">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <span className="font-medium">Footfall Trend</span>
-              <LineChart className="h-5 w-5 text-blue-500" />
-            </div>
-            <div className="h-48">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
-                  <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#E5E7EB" />
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 10, fill: "#6B7280" }}
-                    domain={[0, 'auto']}
-                  />
-                  <Bar dataKey="footfall" fill="#3b5bfd" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Navigation */}
-        <h2 className="text-lg font-medium mb-3">Detailed Insights</h2>
-        <div className="grid grid-cols-2 gap-3 mb-20">
-          <Button 
-            variant="outline" 
-            className="h-20 flex flex-col items-center justify-center"
-            onClick={() => navigate(ROUTES.STORE_ANALYTICS)}
-          >
-            <LineChart className="h-6 w-6 mb-1 text-blue-600" />
-            <span>Analytics</span>
-          </Button>
-          <Button 
-            variant="outline" 
-            className="h-20 flex flex-col items-center justify-center"
-            onClick={() => navigate(ROUTES.STORE_HEATMAP)}
-          >
-            <PieChart className="h-6 w-6 mb-1 text-orange-600" />
-            <span>Heatmap</span>
-          </Button>
-          <Button 
-            variant="outline" 
-            className="h-20 flex flex-col items-center justify-center"
-            onClick={() => navigate(ROUTES.CUSTOMER_JOURNEY)}
-          >
-            <Users className="h-6 w-6 mb-1 text-green-600" />
-            <span>Customer Journey</span>
-          </Button>
-          <Button 
-            variant="outline" 
-            className="h-20 flex flex-col items-center justify-center"
-            onClick={() => navigate(ROUTES.STAFF_PERFORMANCE)}
-          >
-            <Users className="h-6 w-6 mb-1 text-purple-600" />
-            <span>Staff Performance</span>
-          </Button>
         </div>
       </div>
 
-      <Footer />
+      {/* Period Selector */}
+      <div className="bg-white border-b">
+        <div className="flex space-x-1 p-4">
+          {periods.map((period) => (
+            <button
+              key={period.id}
+              onClick={() => setSelectedPeriod(period.id)}
+              className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+                selectedPeriod === period.id
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {period.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Metrics Grid */}
+      <div className="p-4">
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          {metrics.map((metric, index) => (
+            <Card key={index}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <metric.icon className={`h-5 w-5 ${metric.color}`} />
+                  <Badge 
+                    variant={metric.trend === 'up' ? 'default' : 'secondary'}
+                    className={metric.trend === 'up' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+                  >
+                    {metric.trend === 'up' ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
+                    {metric.change}
+                  </Badge>
+                </div>
+                <div className="text-2xl font-bold text-gray-900">{metric.value}</div>
+                <div className="text-sm text-gray-500">{metric.title}</div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-2 gap-4">
+            {quickActions.map((action, index) => (
+              <Card 
+                key={index} 
+                className="cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => navigate(action.route)}
+              >
+                <CardContent className="p-4">
+                  <div className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center mb-3`}>
+                    <action.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1">{action.title}</h3>
+                  <p className="text-sm text-gray-500">{action.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>Recent Activity</span>
+              <Button variant="outline" size="sm">
+                View All
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">New customer registration</p>
+                  <p className="text-xs text-gray-500">2 minutes ago</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Inventory update completed</p>
+                  <p className="text-xs text-gray-500">15 minutes ago</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Staff shift started</p>
+                  <p className="text-xs text-gray-500">1 hour ago</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

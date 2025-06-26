@@ -144,70 +144,22 @@ export const adhocDetailsTemplate = {
 };
 
 export const checklistDetailsTemplate = {
-  questionsCount: 7,
+  questionsCount: 3,
   questions: [
     {
-      question: "Which product category requires immediate restocking?",
-      options: [
-        "Grocery & Staples",
-        "Biscuits & Snacks",
-        "Beverages",
-        "Personal Care & Hygiene"
-      ]
+      question: "Is the shelf clean and organized?",
+      options: ["Done", "Pending"],
+      description: "Check if the shelf is free from dust and items are arranged properly."
     },
     {
-      question: "Which section needs better organization or shelf arrangement?",
-      options: [
-        "Grocery & Staples",
-        "Biscuits & Snacks",
-        "Beverages",
-        "Personal Care & Hygiene"
-      ]
+      question: "Are all products properly tagged?",
+      options: ["Done", "Pending"],
+      description: "Ensure every product on the shelf has a visible price tag."
     },
     {
-      question: "Which product category has the highest demand this week?",
-      options: [
-        "Grocery & Staples",
-        "Biscuits & Snacks",
-        "Beverages",
-        "Personal Care & Hygiene"
-      ]
-    },
-    {
-      question: "Which category requires a price tag update or correction?",
-      options: [
-        "Frozen Foods",
-        "Packaged Grains and Pulses",
-        "Household Cleaning Supplies",
-        "Fresh Meat and Poultry"
-      ]
-    },
-    {
-      question: "Which section needs improved visibility or better shelf placement?",
-      options: [
-        "Confectionery and Chocolates",
-        "Health and Wellness Products",
-        "Pet Food and Supplies",
-        "Personal Care & Hygiene"
-      ]
-    },
-    {
-      question: "Which product category is facing frequent stockouts?",
-      options: [
-        "Grocery & Staples",
-        "Biscuits & Snacks",
-        "Beverages",
-        "Personal Care & Hygiene"
-      ]
-    },
-    {
-      question: "Which section needs better signage or promotional displays?",
-      options: [
-        "Grocery & Staples",
-        "Biscuits & Snacks",
-        "Beverages",
-        "Personal Care & Hygiene"
-      ]
+      question: "Is the promotional signage up to date?",
+      options: ["Done", "Pending"],
+      description: "Verify that all promotional materials are current and correctly placed."
     }
   ]
 };

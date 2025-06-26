@@ -23,7 +23,7 @@ const LoginScreen: React.FC = () => {
       toast("Login successful", {
         duration: 600,
       });
-      navigate('/home'); // Redirect to home page
+      navigate('/stories'); // Redirect to stories page first
     }, 400);
   };
 
@@ -31,6 +31,10 @@ const LoginScreen: React.FC = () => {
     toast("SSO login initiated", {
       duration: 600,
     });
+    // Simulate SSO login success and redirect to stories
+    setTimeout(() => {
+      navigate('/stories');
+    }, 600);
   };
 
   return (

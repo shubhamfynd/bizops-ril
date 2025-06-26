@@ -33,6 +33,12 @@ export const ROUTES = {
   PETTY_CASH_PURCHASE: "/petty-cash-purchase",
 
   EB_COUNT: '/eb-count',
+  
+  // App Stories route
+  APP_STORIES: '/stories',
+  
+  // My Team route
+  MY_TEAM: '/my-team',
 } as const;
 
 export default ROUTES;

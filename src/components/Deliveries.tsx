@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
 import LeftMenu from "@/components/LeftMenu";
-import Footer from "@/components/Footer";
 
 interface Delivery {
   id: string;
@@ -174,9 +173,6 @@ const Deliveries: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Footer - Fixed at bottom */}
-      {!showMenu && <Footer />}
     </div>
   );
 };

@@ -5,7 +5,6 @@ import { BottomNavigation } from '@/components/MySchedule/BottomNavigation';
 import { UserSelector } from '@/components/MySchedule/UserSelector';
 import { ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Footer from '@/components/Footer';
 
 const MySchedule = () => {
   const [tab, setTab] = useState<'my' | 'team'>('my');
@@ -30,9 +29,7 @@ const MySchedule = () => {
           </div>
 
         </div>
-        {/* </div> */}
-
-        <div className="flex-1 px-4 py-4 pb-20">
+        <div className="flex-1 px-4 py-4">
           <div className="flex space-x-2 mb-4">
             <button
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${tab === 'my' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-200'}`}
@@ -67,11 +64,7 @@ const MySchedule = () => {
             <DailyCalendar selectedUser={selectedUser} />
           </div>
         </div>
-
-
       </div>
-
-      <Footer />
     </div>
   );
 };

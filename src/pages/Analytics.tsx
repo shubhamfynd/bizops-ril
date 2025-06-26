@@ -4,7 +4,6 @@ import StoreDashboard from '@/components/analytics/StoreDashboard';
 import OwnDashboard from '@/components/analytics/OwnDashboard';
 import ProductDashboard from '@/components/analytics/ProductDashboard';
 import Header from '@/components/analytics/Header';
-import Footer from '../components/Footer';
 
 const Analytics = () => {
   const [activeTab, setActiveTab] = useState('store');
@@ -32,13 +31,9 @@ const Analytics = () => {
       </div>
       
       {/* Dashboard Content */}
-      <div className="px-4 max-h-[calc(100vh-100px)] overflow-y-auto mb-16">
+      <div className="px-4 max-h-[calc(100vh-100px)] overflow-y-auto">
         {renderDashboard()}
       </div>
-      
-      {/* Bottom Navigation */}
-      {/* <BottomNav activeView="dashboard" /> */}
-      <Footer />
     </div>
   );
 };

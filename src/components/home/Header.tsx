@@ -1,14 +1,18 @@
-
 import React, { useState } from "react";
-import { Menu, ChevronDown, Bell, MessageSquare, Search, QrCode } from 'lucide-react';
+import { Menu, ChevronDown, Bell, MessageSquare, Search, QrCode, Play } from 'lucide-react';
 import LeftMenu from "@/components/LeftMenu";
 import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
   
   const toggleMenu = () => {
     setShowMenu((prevState) => !prevState);
+  };
+
+  const handleStoriesClick = () => {
+    navigate('/stories');
   };
 
   return (
@@ -35,8 +39,18 @@ const Header: React.FC = () => {
 
         <span className="text-white font-semibold text-lg flex items-center">MyStore <ChevronDown size={18} className="ml-1" /></span>
         <div className="flex items-center space-x-4">
-          <Bell className="text-white" />
-          <MessageSquare className="text-white" />
+          <button
+            onClick={handleStoriesClick}
+            className="text-white hover:opacity-80 transition-opacity hover:bg-blue-500/20 hover:rounded-full p-2"
+          >
+            <Play size={20} />
+          </button>
+          <button className="text-white hover:opacity-80 transition-opacity hover:bg-blue-500/20 hover:rounded-full p-2">
+            <Bell size={20} />
+          </button>
+          <button className="text-white hover:opacity-80 transition-opacity hover:bg-blue-500/20 hover:rounded-full p-2">
+            <MessageSquare size={20} />
+          </button>
         </div>
       </div>
       <div className="flex items-center space-x-3 w-full max-w-2xl mx-auto m-2 px-4 py-3">
