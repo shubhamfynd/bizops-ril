@@ -23,6 +23,7 @@ import { VisitorRegister } from "@/pages/VisitorRegister";
 import { StaffPurchase } from "@/pages/StaffPurchase";
 import { PettyCashPurchase } from "@/pages/PettyCashPurchase";
 import { EBCount } from "@/pages/EBCount";
+import InwardRegister from "@/pages/InwardRegister";
 // New pages from repositories
 import StoreInsights from "./pages/insights/StoreInsights";
 import StoreAnalytics from "./pages/insights/StoreAnalytics";
@@ -92,6 +93,7 @@ const App = () => (
             <Route path={ROUTES.STAFF_PURCHASE} element={<StaffPurchase />} />
             <Route path={ROUTES.PETTY_CASH_PURCHASE} element={<PettyCashPurchase />} />
             <Route path={ROUTES.EB_COUNT} element={<EBCount />} />
+            <Route path={ROUTES.INWARD_REGISTER} element={<InwardRegister />} />
             
             {/* New Routes from my-team */}
             <Route path={ROUTES.MY_TEAM} element={<MyTeam />} />

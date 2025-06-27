@@ -34,6 +34,8 @@ const DigitalRegister: React.FC = () => {
       navigate(ROUTES.PETTY_CASH_PURCHASE);
     } else if (register.id === 'eb-count') {
       navigate(ROUTES.EB_COUNT);
+    } else if (register.id === 'inward') {
+      navigate(ROUTES.INWARD_REGISTER);
     } else {
       // Handle other register clicks
       console.log('Clicked register:', register);

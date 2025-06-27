@@ -31,6 +31,7 @@ export const ROUTES = {
   VISITOR_REGISTER: "/visitor-register",
   STAFF_PURCHASE: "/staff-purchase",
   PETTY_CASH_PURCHASE: "/petty-cash-purchase",
+  INWARD_REGISTER: "/inward-register",
 
   EB_COUNT: '/eb-count',
   
