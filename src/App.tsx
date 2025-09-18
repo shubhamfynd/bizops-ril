@@ -35,6 +35,11 @@ import Analytics from "./pages/Analytics";
 import StorePlanogram from "./pages/StorePlanogram";
 import AppStories from "./components/AppStories";
 import MyTeam from "./pages/MyTeam";
+import Business from "./pages/Business";
+import KPIDetail from "./pages/KPIDetail";
+import ZoneDrillDown from "./pages/ZoneDrillDown";
+import StateDrillDown from "./pages/StateDrillDown";
+import CityDrillDown from "./pages/CityDrillDown";
 // Create a new QueryClient instance
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -97,6 +102,13 @@ const App = () => (
             
             {/* New Routes from my-team */}
             <Route path={ROUTES.MY_TEAM} element={<MyTeam />} />
+            
+            {/* Business route */}
+            <Route path={ROUTES.BUSINESS} element={<Business />} />
+            <Route path={ROUTES.KPI_DETAIL} element={<KPIDetail />} />
+            <Route path={ROUTES.ZONE_DRILL_DOWN} element={<ZoneDrillDown />} />
+            <Route path={ROUTES.STATE_DRILL_DOWN} element={<StateDrillDown />} />
+            <Route path={ROUTES.CITY_DRILL_DOWN} element={<CityDrillDown />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

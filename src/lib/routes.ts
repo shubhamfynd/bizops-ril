@@ -40,6 +40,13 @@ export const ROUTES = {
   
   // My Team route
   MY_TEAM: '/my-team',
+  
+  // Business route
+  BUSINESS: '/business',
+  KPI_DETAIL: '/kpi-detail/:kpiType',
+  ZONE_DRILL_DOWN: '/zone-drill-down/:kpiType/:zone',
+  STATE_DRILL_DOWN: '/state-drill-down/:kpiType/:zone/:state',
+  CITY_DRILL_DOWN: '/city-drill-down/:kpiType/:zone/:state/:city',
 } as const;
 
 export default ROUTES;

@@ -37,7 +37,7 @@ const Header: React.FC = () => {
           </>
         )}
 
-        <span className="text-white font-semibold text-lg">MyStore</span>
+        <span className="text-white font-semibold text-lg">BizOps Center</span>
         <div className="flex items-center space-x-4">
           <button
             onClick={handleStoriesClick}
