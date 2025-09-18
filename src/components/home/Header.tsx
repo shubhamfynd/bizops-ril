@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, ChevronDown, Bell, MessageSquare, Search, QrCode, Play } from 'lucide-react';
+import { Menu, ChevronDown, Bell, Play } from 'lucide-react';
 import LeftMenu from "@/components/LeftMenu";
 import { useNavigate } from "react-router-dom";
 
@@ -37,7 +37,7 @@ const Header: React.FC = () => {
           </>
         )}
 
-        <span className="text-white font-semibold text-lg flex items-center">MyStore <ChevronDown size={18} className="ml-1" /></span>
+        <span className="text-white font-semibold text-lg">MyStore</span>
         <div className="flex items-center space-x-4">
           <button
             onClick={handleStoriesClick}
@@ -48,22 +48,7 @@ const Header: React.FC = () => {
           <button className="text-white hover:opacity-80 transition-opacity hover:bg-blue-500/20 hover:rounded-full p-2">
             <Bell size={20} />
           </button>
-          <button className="text-white hover:opacity-80 transition-opacity hover:bg-blue-500/20 hover:rounded-full p-2">
-            <MessageSquare size={20} />
-          </button>
         </div>
-      </div>
-      <div className="flex items-center space-x-3 w-full max-w-2xl mx-auto m-2 px-4 py-3">
-        <div className="flex items-center bg-[#353d7c] rounded-full px-4 py-2 flex-1">
-          <input
-            className="bg-transparent text-white placeholder-white/70 outline-none text-sm sm:text-base flex-1"
-            placeholder="Search"
-          />
-          <Search className="text-white opacity-80" size={20} />
-        </div>
-        <button className="bg-[#353d7c] p-2 sm:p-3 rounded-full hover:bg-[#454d9c] transition">
-          <QrCode className="text-white opacity-80" size={20} />
-        </button>
       </div>
     </div>
   );
