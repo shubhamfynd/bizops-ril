@@ -162,65 +162,6 @@ const Business: React.FC = () => {
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
         <div className="space-y-4">
-          {/* AI Analytics Section */}
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-gray-600 text-sm font-medium">AI Analytics</h2>
-            <div className="flex items-center">
-              <Brain size={16} className="text-blue-500 mr-2" />
-              <span className="text-blue-500 text-xs font-medium">Active</span>
-            </div>
-          </div>
-
-          {/* AI Analytics List */}
-          <div className="bg-white rounded-xl shadow-sm">
-            {/* Sales Performance Alert */}
-            <div className="flex items-start p-4 border-b border-gray-100">
-              <Calendar size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="text-gray-900 font-semibold text-sm">Sales Performance Alert</h3>
-                  <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">High Priority</span>
-                </div>
-                <p className="text-gray-500 text-sm">Daily sales target missed by ₹1.2L (14% gap) - trending below weekly average</p>
-              </div>
-            </div>
-
-            {/* Customer Behavior Insight */}
-            <div className="flex items-start p-4 border-b border-gray-100">
-              <Users size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="text-gray-900 font-semibold text-sm">Customer Behavior Insight</h3>
-                  <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-xs font-medium">Important</span>
-                </div>
-                <p className="text-gray-500 text-sm">Weekend footfall increased 32% but conversion dropped to 68% - optimize staffing</p>
-              </div>
-            </div>
-
-            {/* Inventory Optimization */}
-            <div className="flex items-start p-4 border-b border-gray-100">
-              <RotateCcw size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="text-gray-900 font-semibold text-sm">Inventory Optimization</h3>
-                  <span className="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">Action Required</span>
-                </div>
-                <p className="text-gray-500 text-sm">Summer collection showing 45% slower movement - consider early markdown strategy</p>
-              </div>
-            </div>
-
-            {/* View More Button */}
-            <div className="flex items-center justify-center p-4">
-              <button
-                onClick={() => setShowAIModal(true)}
-                className="flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium"
-              >
-                <span>View More AI Insights</span>
-                <ChevronRight size={16} className="ml-1" />
-              </button>
-            </div>
-          </div>
-
           {/* Key Metrics Section */}
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-gray-600 text-sm font-medium">Key Metrics</h2>
@@ -517,6 +458,15 @@ const Business: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Floating AI Analytics Button */}
+      <button
+        onClick={() => setShowAIModal(true)}
+        className="fixed bottom-6 right-6 bg-[#181f60] hover:bg-[#1a2468] text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:shadow-xl z-40"
+        title="AI Analytics"
+      >
+        <Brain size={24} />
+      </button>
     </div>
   );
 };

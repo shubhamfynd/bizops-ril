@@ -217,65 +217,6 @@ const KPIDetail: React.FC = () => {
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
         <div className="space-y-4">
-          {/* AI Analytics Section */}
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-gray-600 text-sm font-medium">AI Analytics</h2>
-            <div className="flex items-center">
-              <Brain size={16} className="text-blue-500 mr-2" />
-              <span className="text-blue-500 text-xs font-medium">Active</span>
-            </div>
-          </div>
-
-          {/* AI Analytics List */}
-          <div className="bg-white rounded-xl shadow-sm">
-            {/* Zone Performance Alert */}
-            <div className="flex items-start p-4 border-b border-gray-100">
-              <Calendar size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="text-gray-900 font-semibold text-sm">Zone Performance Alert</h3>
-                  <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">High Priority</span>
-                </div>
-                <p className="text-gray-500 text-sm">South zone showing 15% below target - requires immediate attention</p>
-              </div>
-            </div>
-
-            {/* Regional Trend Analysis */}
-            <div className="flex items-start p-4 border-b border-gray-100">
-              <Users size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="text-gray-900 font-semibold text-sm">Regional Trend Analysis</h3>
-                  <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-xs font-medium">Important</span>
-                </div>
-                <p className="text-gray-500 text-sm">North zone outperforming by 8% - analyze success factors for replication</p>
-              </div>
-            </div>
-
-            {/* Cross-Zone Inventory */}
-            <div className="flex items-start p-4 border-b border-gray-100">
-              <RotateCcw size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="text-gray-900 font-semibold text-sm">Cross-Zone Inventory</h3>
-                  <span className="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">Action Required</span>
-                </div>
-                <p className="text-gray-500 text-sm">East zone has excess stock - recommend inter-zone transfer</p>
-              </div>
-            </div>
-
-            {/* View More Button */}
-            <div className="flex items-center justify-center p-4">
-              <button
-                onClick={() => setShowAIModal(true)}
-                className="flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium"
-              >
-                <span>View More AI Insights</span>
-                <ChevronRight size={16} className="ml-1" />
-              </button>
-            </div>
-          </div>
-
           {/* KPI Details Section */}
           <div className="mb-4">
             <div className="mb-3">
@@ -418,6 +359,131 @@ const KPIDetail: React.FC = () => {
             ))}
           </div>
         </div>
+
+        {/* Top 3 and Bottom 3 Stores */}
+        <div className="space-y-4 mt-8">
+          {/* Top 3 Stores */}
+          <div>
+            <h2 className="text-gray-600 text-sm font-medium mb-3">Top 3 Stores</h2>
+            <div className="bg-white rounded-xl shadow-sm">
+              <div className="space-y-0">
+                {(() => {
+                  // Generate KPI-specific data based on kpiType
+                  let topStores = [];
+                  if (kpiType === 'target-vs-sales') {
+                    topStores = [
+                      { name: "RT-001 Mumbai", zone: "North", value: "₹12.5L", achievement: "125.5%" },
+                      { name: "RT-003 Delhi", zone: "North", value: "₹11.8L", achievement: "118.2%" },
+                      { name: "RT-007 Bangalore", zone: "South", value: "₹11.2L", achievement: "112.8%" }
+                    ];
+                  } else if (kpiType === 'footfall-vs-achieved') {
+                    topStores = [
+                      { name: "RT-001 Mumbai", zone: "North", value: "4,850", achievement: "107.8%" },
+                      { name: "RT-003 Delhi", zone: "North", value: "4,720", achievement: "104.9%" },
+                      { name: "RT-007 Bangalore", zone: "South", value: "4,650", achievement: "103.3%" }
+                    ];
+                  } else if (kpiType === 'bills-vs-footfall') {
+                    topStores = [
+                      { name: "RT-001 Mumbai", zone: "North", value: "8.2%", achievement: "125.5%" },
+                      { name: "RT-003 Delhi", zone: "North", value: "7.8%", achievement: "118.2%" },
+                      { name: "RT-007 Bangalore", zone: "South", value: "7.5%", achievement: "112.8%" }
+                    ];
+                  } else if (kpiType === 'ipcm') {
+                    topStores = [
+                      { name: "RT-001 Mumbai", zone: "North", value: "3.2", achievement: "128.0%" },
+                      { name: "RT-003 Delhi", zone: "North", value: "3.1", achievement: "124.0%" },
+                      { name: "RT-007 Bangalore", zone: "South", value: "3.0", achievement: "120.0%" }
+                    ];
+                  } else if (kpiType === 'ats') {
+                    topStores = [
+                      { name: "RT-001 Mumbai", zone: "North", value: "₹3,200", achievement: "128.0%" },
+                      { name: "RT-003 Delhi", zone: "North", value: "₹3,100", achievement: "124.0%" },
+                      { name: "RT-007 Bangalore", zone: "South", value: "₹3,000", achievement: "120.0%" }
+                    ];
+                  }
+                  return topStores.map((store, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-semibold mr-3">
+                          {index + 1}
+                        </div>
+                        <div>
+                          <h3 className="text-gray-900 font-medium text-sm">{store.name}</h3>
+                          <p className="text-gray-500 text-xs">{store.zone} Zone</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-gray-900 font-semibold text-sm">{store.value}</p>
+                        <p className="text-green-600 text-xs font-medium">{store.achievement}</p>
+                      </div>
+                    </div>
+                  ));
+                })()}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom 3 Stores */}
+          <div>
+            <h2 className="text-gray-600 text-sm font-medium mb-3">Bottom 3 Stores</h2>
+            <div className="bg-white rounded-xl shadow-sm">
+              <div className="space-y-0">
+                {(() => {
+                  // Generate KPI-specific data based on kpiType
+                  let bottomStores = [];
+                  if (kpiType === 'target-vs-sales') {
+                    bottomStores = [
+                      { name: "RT-025 Kolkata", zone: "East", value: "₹6.2L", achievement: "62.1%" },
+                      { name: "RT-018 Ahmedabad", zone: "West", value: "₹6.8L", achievement: "68.3%" },
+                      { name: "RT-022 Hyderabad", zone: "South", value: "₹7.1L", achievement: "71.2%" }
+                    ];
+                  } else if (kpiType === 'footfall-vs-achieved') {
+                    bottomStores = [
+                      { name: "RT-025 Kolkata", zone: "East", value: "3,200", achievement: "71.1%" },
+                      { name: "RT-018 Ahmedabad", zone: "West", value: "3,450", achievement: "76.7%" },
+                      { name: "RT-022 Hyderabad", zone: "South", value: "3,650", achievement: "81.1%" }
+                    ];
+                  } else if (kpiType === 'bills-vs-footfall') {
+                    bottomStores = [
+                      { name: "RT-025 Kolkata", zone: "East", value: "5.1%", achievement: "62.1%" },
+                      { name: "RT-018 Ahmedabad", zone: "West", value: "5.5%", achievement: "68.3%" },
+                      { name: "RT-022 Hyderabad", zone: "South", value: "5.8%", achievement: "71.2%" }
+                    ];
+                  } else if (kpiType === 'ipcm') {
+                    bottomStores = [
+                      { name: "RT-025 Kolkata", zone: "East", value: "1.6", achievement: "64.0%" },
+                      { name: "RT-018 Ahmedabad", zone: "West", value: "1.7", achievement: "68.0%" },
+                      { name: "RT-022 Hyderabad", zone: "South", value: "1.8", achievement: "72.0%" }
+                    ];
+                  } else if (kpiType === 'ats') {
+                    bottomStores = [
+                      { name: "RT-025 Kolkata", zone: "East", value: "₹1,600", achievement: "64.0%" },
+                      { name: "RT-018 Ahmedabad", zone: "West", value: "₹1,700", achievement: "68.0%" },
+                      { name: "RT-022 Hyderabad", zone: "South", value: "₹1,800", achievement: "72.0%" }
+                    ];
+                  }
+                  return bottomStores.map((store, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-sm font-semibold mr-3">
+                          {index + 1}
+                        </div>
+                        <div>
+                          <h3 className="text-gray-900 font-medium text-sm">{store.name}</h3>
+                          <p className="text-gray-500 text-xs">{store.zone} Zone</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-gray-900 font-semibold text-sm">{store.value}</p>
+                        <p className="text-red-600 text-xs font-medium">{store.achievement}</p>
+                      </div>
+                    </div>
+                  ));
+                })()}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* AI Analytics Modal */}
@@ -525,6 +591,15 @@ const KPIDetail: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Floating AI Analytics Button */}
+      <button
+        onClick={() => setShowAIModal(true)}
+        className="fixed bottom-6 right-6 bg-[#181f60] hover:bg-[#1a2468] text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:shadow-xl z-40"
+        title="AI Analytics"
+      >
+        <Brain size={24} />
+      </button>
     </div>
   );
 };
