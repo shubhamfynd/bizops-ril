@@ -428,11 +428,7 @@ const CityDrillDown: React.FC = () => {
 
             {/* Time Filter */}
             <div className="mb-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <span className="text-sm font-medium text-gray-700">Time Period</span>
-                </div>
+              <div className="flex justify-end mb-3">
                 <Select value={comparisonPeriod} onValueChange={(value) => setComparisonPeriod(value as ComparisonPeriod)}>
                   <SelectTrigger className="w-32 h-8 text-xs">
                     <SelectValue />
@@ -454,16 +450,12 @@ const CityDrillDown: React.FC = () => {
 
             {/* Attribute Filters */}
             <div className="mb-4">
-              <div className="flex items-center space-x-2 mb-3">
-                <Filter size={16} className="text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Attribute Filters</span>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="flex overflow-x-auto space-x-3 pb-2">
                 {/* Segment Filter */}
-                <div>
+                <div className="flex-shrink-0">
                   <label className="text-xs text-gray-500 mb-1 block">Segment</label>
                   <Select value={attributeFilters.segment} onValueChange={(value) => handleFilterChange('segment', value)}>
-                    <SelectTrigger className="h-8 text-xs">
+                    <SelectTrigger className="h-8 text-xs w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -477,10 +469,10 @@ const CityDrillDown: React.FC = () => {
                 </div>
 
                 {/* Brand Filter */}
-                <div>
+                <div className="flex-shrink-0">
                   <label className="text-xs text-gray-500 mb-1 block">Brand</label>
                   <Select value={attributeFilters.brand} onValueChange={(value) => handleFilterChange('brand', value)}>
-                    <SelectTrigger className="h-8 text-xs">
+                    <SelectTrigger className="h-8 text-xs w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -494,10 +486,10 @@ const CityDrillDown: React.FC = () => {
                 </div>
 
                 {/* Brick Filter */}
-                <div>
+                <div className="flex-shrink-0">
                   <label className="text-xs text-gray-500 mb-1 block">Brick</label>
                   <Select value={attributeFilters.brick} onValueChange={(value) => handleFilterChange('brick', value)}>
-                    <SelectTrigger className="h-8 text-xs">
+                    <SelectTrigger className="h-8 text-xs w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -511,10 +503,10 @@ const CityDrillDown: React.FC = () => {
                 </div>
 
                 {/* Fashion Grade Filter */}
-                <div>
+                <div className="flex-shrink-0">
                   <label className="text-xs text-gray-500 mb-1 block">Fashion Grade</label>
                   <Select value={attributeFilters.fashionGrade} onValueChange={(value) => handleFilterChange('fashionGrade', value)}>
-                    <SelectTrigger className="h-8 text-xs">
+                    <SelectTrigger className="h-8 text-xs w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
