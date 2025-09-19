@@ -410,7 +410,6 @@ const Business: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
       </div>
 
       {/* AI Analytics Modal */}
