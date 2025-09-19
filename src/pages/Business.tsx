@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronLeft, TrendingUp, TrendingDown, Brain, Calendar, RotateCcw, FileText, AlertTriangle, Target, Users, X, ChevronRight } from "lucide-react";
+import { ChevronLeft, TrendingUp, TrendingDown, Sparkles, Calendar, RotateCcw, FileText, AlertTriangle, Target, Users, X, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ROUTES } from "@/lib/routes";
@@ -187,8 +187,9 @@ const Business: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               {/* Target Vs Sales */}
               <div 
-                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(getRAGStatus(currentData.targetVsSales.percentage))} cursor-pointer hover:shadow-md transition-shadow`}
+                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(getRAGStatus(currentData.targetVsSales.percentage))} cursor-pointer hover:shadow-md transition-all duration-300 hover:scale-105 animate-fade-in-up`}
                 onClick={() => handleKPIClick('target-vs-sales')}
+                style={{ animationDelay: '0.1s' }}
               >
                 <div>
                   <h3 className="text-gray-900 font-medium text-sm mb-2">Target Vs Sales</h3>
@@ -220,8 +221,9 @@ const Business: React.FC = () => {
 
               {/* Target Footfall Vs Achieved Footfall */}
               <div 
-                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(getRAGStatus(currentData.footfallVsAchieved.percentage))} cursor-pointer hover:shadow-md transition-shadow`}
+                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(getRAGStatus(currentData.footfallVsAchieved.percentage))} cursor-pointer hover:shadow-md transition-all duration-300 hover:scale-105 animate-fade-in-up`}
                 onClick={() => handleKPIClick('footfall-vs-achieved')}
+                style={{ animationDelay: '0.2s' }}
               >
                 <div>
                   <h3 className="text-gray-900 font-medium text-sm mb-2">Footfall</h3>
@@ -253,8 +255,9 @@ const Business: React.FC = () => {
 
               {/* Conversion % */}
               <div 
-                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(getRAGStatus(currentData.billsVsFootfall.percentage))} cursor-pointer hover:shadow-md transition-shadow`}
+                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(getRAGStatus(currentData.billsVsFootfall.percentage))} cursor-pointer hover:shadow-md transition-all duration-300 hover:scale-105 animate-fade-in-up`}
                 onClick={() => handleKPIClick('bills-vs-footfall')}
+                style={{ animationDelay: '0.3s' }}
               >
                 <div>
                   <h3 className="text-gray-900 font-medium text-sm mb-2">Conversion %</h3>
@@ -286,8 +289,9 @@ const Business: React.FC = () => {
 
               {/* IPCM */}
               <div 
-                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(getIPCMRAGStatus(currentData.ipcm.value))} cursor-pointer hover:shadow-md transition-shadow`}
+                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(getIPCMRAGStatus(currentData.ipcm.value))} cursor-pointer hover:shadow-md transition-all duration-300 hover:scale-105 animate-fade-in-up`}
                 onClick={() => handleKPIClick('ipcm')}
+                style={{ animationDelay: '0.4s' }}
               >
                 <div>
                   <h3 className="text-gray-900 font-medium text-sm mb-2">IPCM</h3>
@@ -319,8 +323,9 @@ const Business: React.FC = () => {
 
               {/* ATS */}
               <div 
-                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(getATSRAGStatus(currentData.ats.value))} cursor-pointer hover:shadow-md transition-shadow`}
+                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(getATSRAGStatus(currentData.ats.value))} cursor-pointer hover:shadow-md transition-all duration-300 hover:scale-105 animate-fade-in-up`}
                 onClick={() => handleKPIClick('ats')}
+                style={{ animationDelay: '0.5s' }}
               >
                 <div>
                   <h3 className="text-gray-900 font-medium text-sm mb-2">ATS</h3>
@@ -355,12 +360,12 @@ const Business: React.FC = () => {
 
       {/* AI Analytics Modal */}
       {showAIModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden animate-slide-in-up">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center">
-                <Brain size={20} className="text-blue-500 mr-3" />
+                <Sparkles size={20} className="text-blue-500 mr-3" />
                 <h2 className="text-xl font-semibold text-gray-900">AI Analytics Insights</h2>
               </div>
               <button
@@ -462,10 +467,10 @@ const Business: React.FC = () => {
       {/* Floating AI Analytics Button */}
       <button
         onClick={() => setShowAIModal(true)}
-        className="fixed bottom-6 right-6 bg-[#181f60] hover:bg-[#1a2468] text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:shadow-xl z-40"
+        className="fixed bottom-6 right-6 bg-[#181f60] hover:bg-[#1a2468] text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:shadow-xl z-40 animate-bounce-in"
         title="AI Analytics"
       >
-        <Brain size={24} />
+        <Sparkles size={24} />
       </button>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronLeft, TrendingUp, TrendingDown, Filter, ChevronRight, Home, Brain, Calendar, RotateCcw, FileText, AlertTriangle, Target, Users, X } from "lucide-react";
+import { ChevronLeft, TrendingUp, TrendingDown, Filter, ChevronRight, Home, Sparkles, Calendar, RotateCcw, FileText, AlertTriangle, Target, Users, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ROUTES } from "@/lib/routes";
 
@@ -382,8 +382,9 @@ const ZoneDrillDown: React.FC = () => {
             {stateData.map((data, index) => (
               <div 
                 key={index} 
-                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(data.ragStatus)} cursor-pointer hover:shadow-md transition-shadow`}
+                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(data.ragStatus)} cursor-pointer hover:shadow-md transition-all duration-300 hover:scale-105 animate-fade-in-up`}
                 onClick={() => handleStateClick(data.state)}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div>
                   <h3 className="text-gray-900 font-medium text-sm mb-2">{data.state}</h3>
@@ -460,7 +461,7 @@ const ZoneDrillDown: React.FC = () => {
                     ];
                   }
                   return topStores.map((store, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0">
+                    <div key={index} className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
                       <div className="flex items-center">
                         <div className="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                           {index + 1}
@@ -521,7 +522,7 @@ const ZoneDrillDown: React.FC = () => {
                     ];
                   }
                   return bottomStores.map((store, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0">
+                    <div key={index} className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
                       <div className="flex items-center">
                         <div className="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                           {index + 1}
@@ -546,12 +547,12 @@ const ZoneDrillDown: React.FC = () => {
 
       {/* AI Analytics Modal */}
       {showAIModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden animate-slide-in-up">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center">
-                <Brain size={20} className="text-blue-500 mr-3" />
+                <Sparkles size={20} className="text-blue-500 mr-3" />
                 <h2 className="text-xl font-semibold text-gray-900">AI Analytics Insights</h2>
               </div>
               <button
@@ -653,10 +654,10 @@ const ZoneDrillDown: React.FC = () => {
       {/* Floating AI Analytics Button */}
       <button
         onClick={() => setShowAIModal(true)}
-        className="fixed bottom-6 right-6 bg-[#181f60] hover:bg-[#1a2468] text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:shadow-xl z-40"
+        className="fixed bottom-6 right-6 bg-[#181f60] hover:bg-[#1a2468] text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:shadow-xl z-40 animate-bounce-in"
         title="AI Analytics"
       >
-        <Brain size={24} />
+        <Sparkles size={24} />
       </button>
     </div>
   );
