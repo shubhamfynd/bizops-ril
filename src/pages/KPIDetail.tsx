@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronLeft, TrendingUp, TrendingDown, Filter, ChevronDown } from "lucide-react";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ChevronLeft, TrendingUp, TrendingDown, Filter, ChevronDown, Brain, Calendar, RotateCcw, FileText, AlertTriangle, Target, Users, X, ChevronRight } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ROUTES } from "@/lib/routes";
 
@@ -28,6 +27,7 @@ const KPIDetail: React.FC = () => {
   const { kpiType } = useParams<{ kpiType: string }>();
   const navigate = useNavigate();
   const [comparisonPeriod, setComparisonPeriod] = useState<ComparisonPeriod>('vs-last-day');
+  const [showAIModal, setShowAIModal] = useState(false);
   const [attributeFilters, setAttributeFilters] = useState<AttributeFilters>({
     segment: 'all',
     brand: 'all',
@@ -134,22 +134,22 @@ const KPIDetail: React.FC = () => {
   const getZoneData = (): ZoneData[] => {
     const baseData = {
       'vs-last-day': {
-        north: { percentage: 88.2, trend: 4.1, direction: 'up' as const },
-        east: { percentage: 82.5, trend: -1.8, direction: 'down' as const },
-        west: { percentage: 85.7, trend: 2.3, direction: 'up' as const },
-        south: { percentage: 79.3, trend: -3.2, direction: 'down' as const }
+        north: { percentage: 88.20, trend: 4.10, direction: 'up' as const },
+        east: { percentage: 82.50, trend: -1.80, direction: 'down' as const },
+        west: { percentage: 85.70, trend: 2.30, direction: 'up' as const },
+        south: { percentage: 79.30, trend: -3.20, direction: 'down' as const }
       },
       'wow': {
-        north: { percentage: 90.1, trend: 5.8, direction: 'up' as const },
-        east: { percentage: 84.2, trend: -2.1, direction: 'down' as const },
-        west: { percentage: 87.3, trend: 3.4, direction: 'up' as const },
-        south: { percentage: 81.6, trend: -1.5, direction: 'down' as const }
+        north: { percentage: 90.10, trend: 5.80, direction: 'up' as const },
+        east: { percentage: 84.20, trend: -2.10, direction: 'down' as const },
+        west: { percentage: 87.30, trend: 3.40, direction: 'up' as const },
+        south: { percentage: 81.60, trend: -1.50, direction: 'down' as const }
       },
       'yoy': {
-        north: { percentage: 85.7, trend: 9.2, direction: 'up' as const },
-        east: { percentage: 78.9, trend: -4.3, direction: 'down' as const },
-        west: { percentage: 83.1, trend: 6.7, direction: 'up' as const },
-        south: { percentage: 76.4, trend: -7.1, direction: 'down' as const }
+        north: { percentage: 85.70, trend: 9.20, direction: 'up' as const },
+        east: { percentage: 78.90, trend: -4.30, direction: 'down' as const },
+        west: { percentage: 83.10, trend: 6.70, direction: 'up' as const },
+        south: { percentage: 76.40, trend: -7.10, direction: 'down' as const }
       }
     };
 
@@ -164,10 +164,10 @@ const KPIDetail: React.FC = () => {
               kpiType === 'ipcm' ? '2.5' : 
               kpiType === 'bills-vs-footfall' ? '9,750' :
               '₹10,50,000',
-      actual: kpiType === 'ats' ? `₹${(data.percentage * 30).toFixed(0)}` : 
-              kpiType === 'ipcm' ? data.percentage / 40 : 
+      actual: kpiType === 'ats' ? `₹${(data.percentage * 30).toFixed(2)}` : 
+              kpiType === 'ipcm' ? (data.percentage / 40).toFixed(2) : 
               kpiType === 'bills-vs-footfall' ? Math.round(data.percentage * 125).toLocaleString() :
-              `₹${(data.percentage * 10000).toLocaleString()}`,
+              `₹${(data.percentage * 10000).toFixed(2)}`,
       ragStatus: getRAGStatus(data.percentage)
     }));
   };
@@ -178,7 +178,7 @@ const KPIDetail: React.FC = () => {
   const getKPITitle = () => {
     switch (kpiType) {
       case 'target-vs-sales': return 'Target Vs Sales';
-      case 'footfall-vs-achieved': return 'Target Footfall Vs Achieved Footfall';
+      case 'footfall-vs-achieved': return 'Footfall';
       case 'bills-vs-footfall': return 'Conversion %';
       case 'ipcm': return 'IPCM: Item Sold Vs Cash Memo';
       case 'ats': return 'ATS: Sales Vs No of Bills';
@@ -216,168 +216,209 @@ const KPIDetail: React.FC = () => {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
-        <div className="mb-4">
-          <div className="mb-3">
-            <h2 className="text-gray-600 text-sm font-medium">{getKPISubtitle()}</h2>
+        <div className="space-y-4">
+          {/* AI Analytics Section */}
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-gray-600 text-sm font-medium">AI Analytics</h2>
+            <div className="flex items-center">
+              <Brain size={16} className="text-blue-500 mr-2" />
+              <span className="text-blue-500 text-xs font-medium">Active</span>
+            </div>
           </div>
 
-          {/* Time Filter */}
-          <div className="mb-4">
-            <div className="flex items-center space-x-2 mb-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">Time Period</span>
+          {/* AI Analytics List */}
+          <div className="bg-white rounded-xl shadow-sm">
+            {/* Zone Performance Alert */}
+            <div className="flex items-start p-4 border-b border-gray-100">
+              <Calendar size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-gray-900 font-semibold text-sm">Zone Performance Alert</h3>
+                  <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">High Priority</span>
+                </div>
+                <p className="text-gray-500 text-sm">South zone showing 15% below target - requires immediate attention</p>
+              </div>
             </div>
-            <div className="bg-white rounded-xl p-1 shadow-sm border">
-              <ToggleGroup 
-                type="single" 
-                value={comparisonPeriod} 
-                onValueChange={(value) => setComparisonPeriod(value as ComparisonPeriod)}
-                className="grid grid-cols-3 gap-1"
+
+            {/* Regional Trend Analysis */}
+            <div className="flex items-start p-4 border-b border-gray-100">
+              <Users size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-gray-900 font-semibold text-sm">Regional Trend Analysis</h3>
+                  <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-xs font-medium">Important</span>
+                </div>
+                <p className="text-gray-500 text-sm">North zone outperforming by 8% - analyze success factors for replication</p>
+              </div>
+            </div>
+
+            {/* Cross-Zone Inventory */}
+            <div className="flex items-start p-4 border-b border-gray-100">
+              <RotateCcw size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-gray-900 font-semibold text-sm">Cross-Zone Inventory</h3>
+                  <span className="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">Action Required</span>
+                </div>
+                <p className="text-gray-500 text-sm">East zone has excess stock - recommend inter-zone transfer</p>
+              </div>
+            </div>
+
+            {/* View More Button */}
+            <div className="flex items-center justify-center p-4">
+              <button
+                onClick={() => setShowAIModal(true)}
+                className="flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium"
               >
-                <ToggleGroupItem 
-                  value="vs-last-day" 
-                  className="flex-1 py-3 px-4 text-sm font-medium rounded-lg data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-sm hover:bg-gray-50 transition-all duration-200"
-                >
-                  <div className="flex flex-col items-center space-y-1">
-                    <span className="text-xs font-semibold">Vs Last Day</span>
-                    <span className="text-xs opacity-75">Daily</span>
-                  </div>
-                </ToggleGroupItem>
-                <ToggleGroupItem 
-                  value="wow" 
-                  className="flex-1 py-3 px-4 text-sm font-medium rounded-lg data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-sm hover:bg-gray-50 transition-all duration-200"
-                >
-                  <div className="flex flex-col items-center space-y-1">
-                    <span className="text-xs font-semibold">WoW</span>
-                    <span className="text-xs opacity-75">Weekly</span>
-                  </div>
-                </ToggleGroupItem>
-                <ToggleGroupItem 
-                  value="yoy" 
-                  className="flex-1 py-3 px-4 text-sm font-medium rounded-lg data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-sm hover:bg-gray-50 transition-all duration-200"
-                >
-                  <div className="flex flex-col items-center space-y-1">
-                    <span className="text-xs font-semibold">YoY</span>
-                    <span className="text-xs opacity-75">Yearly</span>
-                  </div>
-                </ToggleGroupItem>
-              </ToggleGroup>
+                <span>View More AI Insights</span>
+                <ChevronRight size={16} className="ml-1" />
+              </button>
             </div>
           </div>
 
-          {/* Attribute Filters */}
+          {/* KPI Details Section */}
           <div className="mb-4">
-            <div className="flex items-center space-x-2 mb-3">
-              <Filter size={16} className="text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">Attribute Filters</span>
+            <div className="mb-3">
+              <h2 className="text-gray-600 text-sm font-medium">{getKPISubtitle()}</h2>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {/* Segment Filter */}
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Segment</label>
-                <Select value={attributeFilters.segment} onValueChange={(value) => handleFilterChange('segment', value)}>
-                  <SelectTrigger className="h-8 text-xs">
+
+            {/* Time Filter */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-sm font-medium text-gray-700">Time Period</span>
+                </div>
+                <Select value={comparisonPeriod} onValueChange={(value) => setComparisonPeriod(value as ComparisonPeriod)}>
+                  <SelectTrigger className="w-32 h-8 text-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {filterOptions.segment.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-xs">
-                        {option.label}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="vs-last-day" className="text-xs">
+                      Vs Last Day
+                    </SelectItem>
+                    <SelectItem value="wow" className="text-xs">
+                      WoW
+                    </SelectItem>
+                    <SelectItem value="yoy" className="text-xs">
+                      YoY
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+            </div>
 
-              {/* Brand Filter */}
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Brand</label>
-                <Select value={attributeFilters.brand} onValueChange={(value) => handleFilterChange('brand', value)}>
-                  <SelectTrigger className="h-8 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filterOptions.brand.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-xs">
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            {/* Attribute Filters */}
+            <div className="mb-4">
+              <div className="flex items-center space-x-2 mb-3">
+                <Filter size={16} className="text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Attribute Filters</span>
               </div>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Segment Filter */}
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Segment</label>
+                  <Select value={attributeFilters.segment} onValueChange={(value) => handleFilterChange('segment', value)}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filterOptions.segment.map((option) => (
+                        <SelectItem key={option.value} value={option.value} className="text-xs">
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              {/* Brick Filter */}
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Brick</label>
-                <Select value={attributeFilters.brick} onValueChange={(value) => handleFilterChange('brick', value)}>
-                  <SelectTrigger className="h-8 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filterOptions.brick.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-xs">
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                {/* Brand Filter */}
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Brand</label>
+                  <Select value={attributeFilters.brand} onValueChange={(value) => handleFilterChange('brand', value)}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filterOptions.brand.map((option) => (
+                        <SelectItem key={option.value} value={option.value} className="text-xs">
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              {/* Fashion Grade Filter */}
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Fashion Grade</label>
-                <Select value={attributeFilters.fashionGrade} onValueChange={(value) => handleFilterChange('fashionGrade', value)}>
-                  <SelectTrigger className="h-8 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filterOptions.fashionGrade.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-xs">
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {/* Brick Filter */}
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Brick</label>
+                  <Select value={attributeFilters.brick} onValueChange={(value) => handleFilterChange('brick', value)}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filterOptions.brick.map((option) => (
+                        <SelectItem key={option.value} value={option.value} className="text-xs">
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Fashion Grade Filter */}
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Fashion Grade</label>
+                  <Select value={attributeFilters.fashionGrade} onValueChange={(value) => handleFilterChange('fashionGrade', value)}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filterOptions.fashionGrade.map((option) => (
+                        <SelectItem key={option.value} value={option.value} className="text-xs">
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
           
           {/* Zone-wise KPI Cards */}
-          <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
             {filteredData.map((data, index) => (
               <div 
                 key={index} 
-                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 ${getBorderColor(data.ragStatus)} cursor-pointer hover:shadow-md transition-shadow`}
+                className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(data.ragStatus)} cursor-pointer hover:shadow-md transition-shadow`}
                 onClick={() => handleZoneClick(data.zone)}
               >
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="text-gray-900 font-medium text-base">{data.zone} Zone</h3>
-                    <div className="flex items-center mt-1">
-                      {getTrendIcon(data.direction)}
-                      <span className={`text-xs ml-1 ${getTrendColor(data.direction)}`}>
-                        {Math.abs(data.trend)}% {comparisonPeriod === 'vs-last-day' ? 'vs Last Day' : 
-                         comparisonPeriod === 'wow' ? 'WoW' : 'YoY'}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className={`text-2xl font-bold ${getValueColor(data.ragStatus)}`}>
-                      {kpiType === 'ats' ? `₹${data.percentage * 30}` : 
-                       kpiType === 'ipcm' ? data.percentage / 40 : 
-                       `${data.percentage}%`}
+                <div>
+                  <h3 className="text-gray-900 font-medium text-sm mb-2">{data.zone} Zone</h3>
+                  <div className="flex items-center mb-3">
+                    {getTrendIcon(data.direction)}
+                    <span className={`text-xs ml-1 ${getTrendColor(data.direction)}`}>
+                      {Math.abs(data.trend).toFixed(2)}%
                     </span>
                   </div>
                 </div>
-                <div className="border-t border-gray-100 pt-3">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <span className="text-xs text-gray-500">Target</span>
-                      <div className="text-sm font-semibold text-gray-900">{data.target}</div>
+                <div className="text-center mb-3">
+                  <span className={`text-2xl font-bold ${getValueColor(data.ragStatus)}`}>
+                    {kpiType === 'ats' ? `₹${(data.percentage * 30).toFixed(2)}` : 
+                     kpiType === 'ipcm' ? (data.percentage / 40).toFixed(2) : 
+                     `${data.percentage.toFixed(2)}%`}
+                  </span>
+                </div>
+                <div className="border-t border-gray-100 pt-2">
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-500">Target</span>
+                      <span className="font-semibold text-gray-900">{data.target}</span>
                     </div>
-                    <div>
-                      <span className="text-xs text-gray-500">Actual</span>
-                      <div className="text-sm font-semibold text-gray-900">{data.actual}</div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-500">Actual</span>
+                      <span className="font-semibold text-gray-900">{data.actual}</span>
                     </div>
                   </div>
                 </div>
@@ -386,6 +427,112 @@ const KPIDetail: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* AI Analytics Modal */}
+      {showAIModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center">
+                <Brain size={20} className="text-blue-500 mr-3" />
+                <h2 className="text-xl font-semibold text-gray-900">AI Analytics Insights</h2>
+              </div>
+              <button
+                onClick={() => setShowAIModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X size={20} className="text-gray-500" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="overflow-y-auto max-h-[60vh]">
+              {/* Zone Performance Alert */}
+              <div className="flex items-start p-4 border-b border-gray-100">
+                <Calendar size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Zone Performance Alert</h3>
+                    <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">High Priority</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">South zone showing 15% below target - requires immediate attention</p>
+                </div>
+              </div>
+
+              {/* Regional Trend Analysis */}
+              <div className="flex items-start p-4 border-b border-gray-100">
+                <Users size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Regional Trend Analysis</h3>
+                    <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-xs font-medium">Important</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">North zone outperforming by 8% - analyze success factors for replication</p>
+                </div>
+              </div>
+
+              {/* Cross-Zone Inventory */}
+              <div className="flex items-start p-4 border-b border-gray-100">
+                <RotateCcw size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Cross-Zone Inventory</h3>
+                    <span className="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">Action Required</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">East zone has excess stock - recommend inter-zone transfer</p>
+                </div>
+              </div>
+
+              {/* Zone Competition Analysis */}
+              <div className="flex items-start p-4 border-b border-gray-100">
+                <Target size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Zone Competition Analysis</h3>
+                    <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-xs font-medium">Important</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">West zone facing increased competition - adjust pricing strategy</p>
+                </div>
+              </div>
+
+              {/* Regional Demand Forecast */}
+              <div className="flex items-start p-4 border-b border-gray-100">
+                <AlertTriangle size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Regional Demand Forecast</h3>
+                    <span className="bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full text-xs font-medium">Monitor</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">All zones showing seasonal demand shift - prepare inventory accordingly</p>
+                </div>
+              </div>
+
+              {/* Zone Efficiency Metrics */}
+              <div className="flex items-start p-4">
+                <FileText size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Zone Efficiency Metrics</h3>
+                    <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">High Priority</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">South zone operational efficiency down 12% - review processes</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex items-center justify-end p-6 border-t border-gray-200">
+              <button
+                onClick={() => setShowAIModal(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronLeft, TrendingUp, TrendingDown, Filter, ChevronRight, Home, MapPin } from "lucide-react";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ChevronLeft, TrendingUp, TrendingDown, Filter, ChevronRight, Home, MapPin, Brain, Calendar, RotateCcw, FileText, AlertTriangle, Target, Users, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ROUTES } from "@/lib/routes";
 
@@ -30,6 +29,7 @@ const CityDrillDown: React.FC = () => {
   const { kpiType, zone, state, city } = useParams<{ kpiType: string; zone: string; state: string; city: string }>();
   const navigate = useNavigate();
   const [comparisonPeriod, setComparisonPeriod] = useState<ComparisonPeriod>('vs-last-day');
+  const [showAIModal, setShowAIModal] = useState(false);
   const [attributeFilters, setAttributeFilters] = useState<AttributeFilters>({
     segment: 'all',
     brand: 'all',
@@ -200,22 +200,22 @@ const CityDrillDown: React.FC = () => {
 
     const baseData = {
       'vs-last-day': {
-        north: { basePercentage: 88.2, trend: 4.1, direction: 'up' as const },
-        east: { basePercentage: 82.5, trend: -1.8, direction: 'down' as const },
-        west: { basePercentage: 85.7, trend: 2.3, direction: 'up' as const },
-        south: { basePercentage: 79.3, trend: -3.2, direction: 'down' as const }
+        north: { basePercentage: 88.20, trend: 4.10, direction: 'up' as const },
+        east: { basePercentage: 82.50, trend: -1.80, direction: 'down' as const },
+        west: { basePercentage: 85.70, trend: 2.30, direction: 'up' as const },
+        south: { basePercentage: 79.30, trend: -3.20, direction: 'down' as const }
       },
       'wow': {
-        north: { basePercentage: 90.1, trend: 5.8, direction: 'up' as const },
-        east: { basePercentage: 84.2, trend: -2.1, direction: 'down' as const },
-        west: { basePercentage: 87.3, trend: 3.4, direction: 'up' as const },
-        south: { basePercentage: 81.6, trend: -1.5, direction: 'down' as const }
+        north: { basePercentage: 90.10, trend: 5.80, direction: 'up' as const },
+        east: { basePercentage: 84.20, trend: -2.10, direction: 'down' as const },
+        west: { basePercentage: 87.30, trend: 3.40, direction: 'up' as const },
+        south: { basePercentage: 81.60, trend: -1.50, direction: 'down' as const }
       },
       'yoy': {
-        north: { basePercentage: 85.7, trend: 9.2, direction: 'up' as const },
-        east: { basePercentage: 78.9, trend: -4.3, direction: 'down' as const },
-        west: { basePercentage: 83.1, trend: 6.7, direction: 'up' as const },
-        south: { basePercentage: 76.4, trend: -7.1, direction: 'down' as const }
+        north: { basePercentage: 85.70, trend: 9.20, direction: 'up' as const },
+        east: { basePercentage: 78.90, trend: -4.30, direction: 'down' as const },
+        west: { basePercentage: 83.10, trend: 6.70, direction: 'up' as const },
+        south: { basePercentage: 76.40, trend: -7.10, direction: 'down' as const }
       }
     };
 
@@ -235,17 +235,17 @@ const CityDrillDown: React.FC = () => {
         storeName: store.name,
         storeCode: store.code,
         location: store.location,
-        percentage: Math.round(storePercentage * 10) / 10,
-        trend: Math.round((currentZoneData.trend + (Math.random() - 0.5) * 5) * 10) / 10,
+        percentage: Math.round((Math.max(0, Math.min(100, currentZoneData.basePercentage + variation)) * 100) / 100),
+        trend: Math.round((currentZoneData.trend + (Math.random() - 0.5) * 5) * 100) / 100,
         direction: currentZoneData.direction,
         target: kpiType === 'ats' ? '₹2,500' : 
                 kpiType === 'ipcm' ? '2.5' : 
                 kpiType === 'bills-vs-footfall' ? '9,750' :
                 '₹10,50,000',
-        actual: kpiType === 'ats' ? `₹${(storePercentage * 30).toFixed(0)}` : 
-                kpiType === 'ipcm' ? storePercentage / 40 : 
+        actual: kpiType === 'ats' ? `₹${(storePercentage * 30).toFixed(2)}` : 
+                kpiType === 'ipcm' ? (storePercentage / 40).toFixed(2) : 
                 kpiType === 'bills-vs-footfall' ? Math.round(storePercentage * 125).toLocaleString() :
-                `₹${(storePercentage * 10000).toLocaleString()}`,
+                `₹${(storePercentage * 10000).toFixed(2)}`,
         ragStatus: getRAGStatus(storePercentage)
       };
     });
@@ -256,7 +256,7 @@ const CityDrillDown: React.FC = () => {
   const getKPITitle = () => {
     switch (kpiType) {
       case 'target-vs-sales': return 'Target Vs Sales';
-      case 'footfall-vs-achieved': return 'Target Footfall Vs Achieved Footfall';
+      case 'footfall-vs-achieved': return 'Footfall';
       case 'bills-vs-footfall': return 'Conversion %';
       case 'ipcm': return 'IPCM: Item Sold Vs Cash Memo';
       case 'ats': return 'ATS: Sales Vs No of Bills';
@@ -360,172 +360,213 @@ const CityDrillDown: React.FC = () => {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
-        <div className="mb-4">
-          <div className="mb-3">
-            <h2 className="text-gray-600 text-sm font-medium">{getKPISubtitle()}</h2>
+        <div className="space-y-4">
+          {/* AI Analytics Section */}
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-gray-600 text-sm font-medium">AI Analytics</h2>
+            <div className="flex items-center">
+              <Brain size={16} className="text-blue-500 mr-2" />
+              <span className="text-blue-500 text-xs font-medium">Active</span>
+            </div>
           </div>
 
-          {/* Time Filter */}
-          <div className="mb-4">
-            <div className="flex items-center space-x-2 mb-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">Time Period</span>
+          {/* AI Analytics List */}
+          <div className="bg-white rounded-xl shadow-sm">
+            {/* Store Performance Alert */}
+            <div className="flex items-start p-4 border-b border-gray-100">
+              <Calendar size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-gray-900 font-semibold text-sm">Store Performance Alert</h3>
+                  <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">High Priority</span>
+                </div>
+                <p className="text-gray-500 text-sm">RT-001 showing 25% below target - requires immediate store-level intervention</p>
+              </div>
             </div>
-            <div className="bg-white rounded-xl p-1 shadow-sm border">
-              <ToggleGroup 
-                type="single" 
-                value={comparisonPeriod} 
-                onValueChange={(value) => setComparisonPeriod(value as ComparisonPeriod)}
-                className="grid grid-cols-3 gap-1"
+
+            {/* Store Market Analysis */}
+            <div className="flex items-start p-4 border-b border-gray-100">
+              <Users size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-gray-900 font-semibold text-sm">Store Market Analysis</h3>
+                  <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-xs font-medium">Important</span>
+                </div>
+                <p className="text-gray-500 text-sm">RT-003 outperforming by 18% - analyze store strategies for replication</p>
+              </div>
+            </div>
+
+            {/* Store Inventory Distribution */}
+            <div className="flex items-start p-4 border-b border-gray-100">
+              <RotateCcw size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-gray-900 font-semibold text-sm">Store Inventory Distribution</h3>
+                  <span className="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">Action Required</span>
+                </div>
+                <p className="text-gray-500 text-sm">RT-002 has excess inventory - recommend inter-store transfer</p>
+              </div>
+            </div>
+
+            {/* View More Button */}
+            <div className="flex items-center justify-center p-4">
+              <button
+                onClick={() => setShowAIModal(true)}
+                className="flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium"
               >
-                <ToggleGroupItem 
-                  value="vs-last-day" 
-                  className="flex-1 py-3 px-4 text-sm font-medium rounded-lg data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-sm hover:bg-gray-50 transition-all duration-200"
-                >
-                  <div className="flex flex-col items-center space-y-1">
-                    <span className="text-xs font-semibold">Vs Last Day</span>
-                    <span className="text-xs opacity-75">Daily</span>
-                  </div>
-                </ToggleGroupItem>
-                <ToggleGroupItem 
-                  value="wow" 
-                  className="flex-1 py-3 px-4 text-sm font-medium rounded-lg data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-sm hover:bg-gray-50 transition-all duration-200"
-                >
-                  <div className="flex flex-col items-center space-y-1">
-                    <span className="text-xs font-semibold">WoW</span>
-                    <span className="text-xs opacity-75">Weekly</span>
-                  </div>
-                </ToggleGroupItem>
-                <ToggleGroupItem 
-                  value="yoy" 
-                  className="flex-1 py-3 px-4 text-sm font-medium rounded-lg data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-sm hover:bg-gray-50 transition-all duration-200"
-                >
-                  <div className="flex flex-col items-center space-y-1">
-                    <span className="text-xs font-semibold">YoY</span>
-                    <span className="text-xs opacity-75">Yearly</span>
-                  </div>
-                </ToggleGroupItem>
-              </ToggleGroup>
+                <span>View More AI Insights</span>
+                <ChevronRight size={16} className="ml-1" />
+              </button>
             </div>
           </div>
 
-          {/* Attribute Filters */}
+          {/* Store Details Section */}
           <div className="mb-4">
-            <div className="flex items-center space-x-2 mb-3">
-              <Filter size={16} className="text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">Attribute Filters</span>
+            <div className="mb-3">
+              <h2 className="text-gray-600 text-sm font-medium">{getKPISubtitle()}</h2>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {/* Segment Filter */}
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Segment</label>
-                <Select value={attributeFilters.segment} onValueChange={(value) => handleFilterChange('segment', value)}>
-                  <SelectTrigger className="h-8 text-xs">
+
+            {/* Time Filter */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-sm font-medium text-gray-700">Time Period</span>
+                </div>
+                <Select value={comparisonPeriod} onValueChange={(value) => setComparisonPeriod(value as ComparisonPeriod)}>
+                  <SelectTrigger className="w-32 h-8 text-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {filterOptions.segment.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-xs">
-                        {option.label}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="vs-last-day" className="text-xs">
+                      Vs Last Day
+                    </SelectItem>
+                    <SelectItem value="wow" className="text-xs">
+                      WoW
+                    </SelectItem>
+                    <SelectItem value="yoy" className="text-xs">
+                      YoY
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+            </div>
 
-              {/* Brand Filter */}
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Brand</label>
-                <Select value={attributeFilters.brand} onValueChange={(value) => handleFilterChange('brand', value)}>
-                  <SelectTrigger className="h-8 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filterOptions.brand.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-xs">
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            {/* Attribute Filters */}
+            <div className="mb-4">
+              <div className="flex items-center space-x-2 mb-3">
+                <Filter size={16} className="text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Attribute Filters</span>
               </div>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Segment Filter */}
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Segment</label>
+                  <Select value={attributeFilters.segment} onValueChange={(value) => handleFilterChange('segment', value)}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filterOptions.segment.map((option) => (
+                        <SelectItem key={option.value} value={option.value} className="text-xs">
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              {/* Brick Filter */}
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Brick</label>
-                <Select value={attributeFilters.brick} onValueChange={(value) => handleFilterChange('brick', value)}>
-                  <SelectTrigger className="h-8 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filterOptions.brick.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-xs">
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                {/* Brand Filter */}
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Brand</label>
+                  <Select value={attributeFilters.brand} onValueChange={(value) => handleFilterChange('brand', value)}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filterOptions.brand.map((option) => (
+                        <SelectItem key={option.value} value={option.value} className="text-xs">
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              {/* Fashion Grade Filter */}
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Fashion Grade</label>
-                <Select value={attributeFilters.fashionGrade} onValueChange={(value) => handleFilterChange('fashionGrade', value)}>
-                  <SelectTrigger className="h-8 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filterOptions.fashionGrade.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-xs">
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {/* Brick Filter */}
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Brick</label>
+                  <Select value={attributeFilters.brick} onValueChange={(value) => handleFilterChange('brick', value)}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filterOptions.brick.map((option) => (
+                        <SelectItem key={option.value} value={option.value} className="text-xs">
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Fashion Grade Filter */}
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Fashion Grade</label>
+                  <Select value={attributeFilters.fashionGrade} onValueChange={(value) => handleFilterChange('fashionGrade', value)}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filterOptions.fashionGrade.map((option) => (
+                        <SelectItem key={option.value} value={option.value} className="text-xs">
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
           
           {/* Store-wise KPI Cards */}
-          <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
             {storeData.map((data, index) => (
-              <div key={index} className={`bg-white rounded-xl p-4 shadow-sm border-l-4 ${getBorderColor(data.ragStatus)}`}>
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="text-gray-900 font-medium text-base">{data.storeName}</h3>
-                    <div className="flex items-center mt-1 space-x-2">
-                      <div className="flex items-center">
-                        <MapPin size={12} className="text-gray-400" />
-                        <span className="text-xs text-gray-500 ml-1">{data.location}</span>
-                      </div>
-                      <span className="text-xs text-gray-400">•</span>
-                      <span className="text-xs text-gray-500">{data.storeCode}</span>
+              <div key={index} className={`bg-white rounded-xl p-4 shadow-sm border-l-4 aspect-square flex flex-col justify-between ${getBorderColor(data.ragStatus)}`}>
+                <div>
+                  <h3 className="text-gray-900 font-medium text-sm mb-2">{data.storeName}</h3>
+                  <div className="flex items-center mb-2 space-x-2">
+                    <div className="flex items-center">
+                      <MapPin size={10} className="text-gray-400" />
+                      <span className="text-xs text-gray-500 ml-1">{data.location}</span>
                     </div>
-                    <div className="flex items-center mt-1">
-                      {getTrendIcon(data.direction)}
-                      <span className={`text-xs ml-1 ${getTrendColor(data.direction)}`}>
-                        {Math.abs(data.trend)}% {comparisonPeriod === 'vs-last-day' ? 'vs Last Day' : 
-                         comparisonPeriod === 'wow' ? 'WoW' : 'YoY'}
-                      </span>
-                    </div>
+                    <span className="text-xs text-gray-400">•</span>
+                    <span className="text-xs text-gray-500">{data.storeCode}</span>
                   </div>
-                  <div className="text-right">
-                    <span className={`text-2xl font-bold ${getValueColor(data.ragStatus)}`}>
-                      {kpiType === 'ats' ? `₹${data.percentage * 30}` : 
-                       kpiType === 'ipcm' ? data.percentage / 40 : 
-                       `${data.percentage}%`}
+                  <div className="flex items-center mb-3">
+                    {getTrendIcon(data.direction)}
+                    <span className={`text-xs ml-1 ${getTrendColor(data.direction)}`}>
+                      {Math.abs(data.trend).toFixed(2)}%
                     </span>
                   </div>
                 </div>
-                <div className="border-t border-gray-100 pt-3">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <span className="text-xs text-gray-500">Target</span>
-                      <div className="text-sm font-semibold text-gray-900">{data.target}</div>
+                <div className="text-center mb-3">
+                  <span className={`text-2xl font-bold ${getValueColor(data.ragStatus)}`}>
+                    {kpiType === 'ats' ? `₹${(data.percentage * 30).toFixed(2)}` : 
+                     kpiType === 'ipcm' ? (data.percentage / 40).toFixed(2) : 
+                     `${data.percentage.toFixed(2)}%`}
+                  </span>
+                </div>
+                <div className="border-t border-gray-100 pt-2">
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-500">Target</span>
+                      <span className="font-semibold text-gray-900">{data.target}</span>
                     </div>
-                    <div>
-                      <span className="text-xs text-gray-500">Actual</span>
-                      <div className="text-sm font-semibold text-gray-900">{data.actual}</div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-500">Actual</span>
+                      <span className="font-semibold text-gray-900">{data.actual}</span>
                     </div>
                   </div>
                 </div>
@@ -534,6 +575,112 @@ const CityDrillDown: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* AI Analytics Modal */}
+      {showAIModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center">
+                <Brain size={20} className="text-blue-500 mr-3" />
+                <h2 className="text-xl font-semibold text-gray-900">AI Analytics Insights</h2>
+              </div>
+              <button
+                onClick={() => setShowAIModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X size={20} className="text-gray-500" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="overflow-y-auto max-h-[60vh]">
+              {/* Store Performance Alert */}
+              <div className="flex items-start p-4 border-b border-gray-100">
+                <Calendar size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Store Performance Alert</h3>
+                    <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">High Priority</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">RT-001 showing 25% below target - requires immediate store-level intervention</p>
+                </div>
+              </div>
+
+              {/* Store Market Analysis */}
+              <div className="flex items-start p-4 border-b border-gray-100">
+                <Users size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Store Market Analysis</h3>
+                    <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-xs font-medium">Important</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">RT-003 outperforming by 18% - analyze store strategies for replication</p>
+                </div>
+              </div>
+
+              {/* Store Inventory Distribution */}
+              <div className="flex items-start p-4 border-b border-gray-100">
+                <RotateCcw size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Store Inventory Distribution</h3>
+                    <span className="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">Action Required</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">RT-002 has excess inventory - recommend inter-store transfer</p>
+                </div>
+              </div>
+
+              {/* Store Competition Analysis */}
+              <div className="flex items-start p-4 border-b border-gray-100">
+                <Target size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Store Competition Analysis</h3>
+                    <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-xs font-medium">Important</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">RT-004 facing increased competition - adjust store-level pricing strategy</p>
+                </div>
+              </div>
+
+              {/* Store Demand Forecast */}
+              <div className="flex items-start p-4 border-b border-gray-100">
+                <AlertTriangle size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Store Demand Forecast</h3>
+                    <span className="bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full text-xs font-medium">Monitor</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">All stores showing seasonal demand shift - prepare store inventory accordingly</p>
+                </div>
+              </div>
+
+              {/* Store Efficiency Metrics */}
+              <div className="flex items-start p-4">
+                <FileText size={20} className="text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-gray-900 font-semibold text-sm">Store Efficiency Metrics</h3>
+                    <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">High Priority</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">RT-001 operational efficiency down 20% - review store processes</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex items-center justify-end p-6 border-t border-gray-200">
+              <button
+                onClick={() => setShowAIModal(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
